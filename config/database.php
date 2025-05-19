@@ -17,7 +17,13 @@ class Database {
             $this->conn = new mysqli($this->host, $this->username, $this->password, $this->database);
             
             if ($this->conn->connect_error) {
+                error_log("Database Connection Error: " . $this->conn->connect_error);
                 throw new Exception("Connection failed: " . $this->conn->connect_error);
+            }
+            
+            // Set charset to ensure proper encoding
+            if (!$this->conn->set_charset("utf8mb4")) {
+                error_log("Error setting charset: " . $this->conn->error);
             }
             
             return $this->conn;

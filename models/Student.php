@@ -17,12 +17,21 @@ class Student {
                      VALUES (?, ?, ?, ?)";
             
             $stmt = $this->conn->prepare($query);
+            if (!$stmt) {
+                error_log("Prepare failed: " . $this->conn->error);
+                return false;
+            }
+
             $stmt->bind_param("ssss", $name, $email, $phone, $course);
             
-            if ($stmt->execute()) {
-                return $this->conn->insert_id;
+            if (!$stmt->execute()) {
+                error_log("Execute failed: " . $stmt->error);
+                return false;
             }
-            return false;
+
+            $insert_id = $this->conn->insert_id;
+            $stmt->close();
+            return $insert_id;
         } catch (Exception $e) {
             error_log("Error creating student: " . $e->getMessage());
             return false;
@@ -34,6 +43,10 @@ class Student {
         try {
             $query = "SELECT * FROM " . $this->table . " ORDER BY created_at DESC";
             $result = $this->conn->query($query);
+            if (!$result) {
+                error_log("Query failed: " . $this->conn->error);
+                return [];
+            }
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             error_log("Error reading students: " . $e->getMessage());
@@ -46,10 +59,21 @@ class Student {
         try {
             $query = "SELECT * FROM " . $this->table . " WHERE id = ?";
             $stmt = $this->conn->prepare($query);
+            if (!$stmt) {
+                error_log("Prepare failed: " . $this->conn->error);
+                return null;
+            }
+
             $stmt->bind_param("i", $id);
-            $stmt->execute();
+            if (!$stmt->execute()) {
+                error_log("Execute failed: " . $stmt->error);
+                return null;
+            }
+
             $result = $stmt->get_result();
-            return $result->fetch_assoc();
+            $data = $result->fetch_assoc();
+            $stmt->close();
+            return $data;
         } catch (Exception $e) {
             error_log("Error reading student: " . $e->getMessage());
             return null;
@@ -64,9 +88,21 @@ class Student {
                      WHERE id = ?";
             
             $stmt = $this->conn->prepare($query);
+            if (!$stmt) {
+                error_log("Prepare failed: " . $this->conn->error);
+                return false;
+            }
+
             $stmt->bind_param("ssssi", $name, $email, $phone, $course, $id);
             
-            return $stmt->execute();
+            if (!$stmt->execute()) {
+                error_log("Execute failed: " . $stmt->error);
+                return false;
+            }
+
+            $success = $stmt->affected_rows > 0;
+            $stmt->close();
+            return $success;
         } catch (Exception $e) {
             error_log("Error updating student: " . $e->getMessage());
             return false;
@@ -78,8 +114,20 @@ class Student {
         try {
             $query = "DELETE FROM " . $this->table . " WHERE id = ?";
             $stmt = $this->conn->prepare($query);
+            if (!$stmt) {
+                error_log("Prepare failed: " . $this->conn->error);
+                return false;
+            }
+
             $stmt->bind_param("i", $id);
-            return $stmt->execute();
+            if (!$stmt->execute()) {
+                error_log("Execute failed: " . $stmt->error);
+                return false;
+            }
+
+            $success = $stmt->affected_rows > 0;
+            $stmt->close();
+            return $success;
         } catch (Exception $e) {
             error_log("Error deleting student: " . $e->getMessage());
             return false;

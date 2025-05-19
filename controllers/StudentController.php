@@ -19,11 +19,13 @@ class StudentController {
             $errors = $this->student->validate($name, $email, $phone, $course);
             
             if (empty($errors)) {
-                if ($this->student->create($name, $email, $phone, $course)) {
+                $result = $this->student->create($name, $email, $phone, $course);
+                if ($result) {
                     $_SESSION['success'] = "Student added successfully!";
                     header("Location: index.php");
                     exit();
                 } else {
+                    error_log("Failed to create student. Data: " . json_encode($_POST));
                     $errors['general'] = "Failed to add student. Please try again.";
                 }
             }
@@ -49,6 +51,7 @@ class StudentController {
                     header("Location: index.php");
                     exit();
                 } else {
+                    error_log("Failed to update student. ID: $id, Data: " . json_encode($_POST));
                     $errors['general'] = "Failed to update student. Please try again.";
                 }
             }
@@ -62,6 +65,7 @@ class StudentController {
         if ($this->student->delete($id)) {
             $_SESSION['success'] = "Student deleted successfully!";
         } else {
+            error_log("Failed to delete student. ID: $id");
             $_SESSION['error'] = "Failed to delete student. Please try again.";
         }
         header("Location: index.php");
