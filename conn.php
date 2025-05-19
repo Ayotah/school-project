@@ -1,17 +1,12 @@
-<!-- <?php
-$db_server ='localhost';
-$db_username ='roots';
-$db_pass='';
-$db_name ='logindb';
-$conn='';
-try{
-    $conn=mysqli_connect($db_server,
-    $db_username,
-    $db_pass,
-    $db_name,
-);
+<?php
+require_once 'config/database.php';
+
+function getConnection() {
+    $database = new Database();
+    return $database->connect();
 }
-catch(mysqli_sql_exception){
-    echo 'Could not connect <br>';
-}
-?> -->
+
+// Example usage:
+// $conn = getConnection();
+// Use $conn for database operations
+// $database->close(); // When done with the connection
