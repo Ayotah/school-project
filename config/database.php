@@ -6,6 +6,12 @@ class Database {
     private $database = 'logindb';
     private $conn;
 
+    // Getters for connection properties
+    public function getHost() { return $this->host; }
+    public function getUsername() { return $this->username; }
+    public function getPassword() { return $this->password; }
+    public function getDatabase() { return $this->database; }
+
     public function connect() {
         try {
             $this->conn = new mysqli($this->host, $this->username, $this->password, $this->database);
