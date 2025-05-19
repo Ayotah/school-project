@@ -6,15 +6,15 @@ $controller = new StudentController();
 $students = $controller->getAllStudents();
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
                 <h4>Student List
                     <a href="create.php" class="btn btn-primary float-end">Add Student</a>
-                </h4>
-            </div>
-            <div class="card-body">
+                        </h4>
+                    </div>
+                    <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -43,7 +43,7 @@ $students = $controller->getAllStudents();
                                                 <button type="submit" name="delete_student" value="<?php echo $student['id']; ?>" 
                                                         class="btn btn-danger btn-sm" 
                                                         onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
-                                            </form>
+                        </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -54,11 +54,11 @@ $students = $controller->getAllStudents();
                             <?php endif; ?>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 <?php require_once 'includes/footer.php'; ?>
 
